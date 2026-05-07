@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Painel de Eventos</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Painel inicial</p>
+          <h1>Eventos</h1>
+        </div>
+        <div class="source">
+          <span>Fonte</span>
+          <strong id="sourceFile">planilha Excel</strong>
+        </div>
+      </header>
+
+      <section class="how-to" id="howToPanel" aria-label="Como usar">
+        <div class="how-to-head">
+          <h2>Como usar</h2>
+          <button class="ghost-button compact-button" id="toggleHowTo" type="button" aria-expanded="true">Ocultar</button>
+        </div>
+        <div class="how-to-body">
+          <ol>
+            <li>Confira os eventos de amanhã.</li>
+            <li>Clique em "Adicionar ao Google Agenda" para criar o lembrete.</li>
+            <li>Compartilhe o calendário com a equipe.</li>
+            <li>Use "Copiar resumo" se quiser enviar no WhatsApp.</li>
+          </ol>
+
+          <div class="calendar-guide" aria-label="Passo a passo para usar o calendário compartilhado">
+            <h3>Passo a passo para usar o calendário compartilhado</h3>
+            <ol>
+              <li>Exporte a semana pelo botão "Exportar semana para calendário".</li>
+              <li>Abra o Google Agenda.</li>
+              <li>Importe o arquivo .ics no calendário compartilhado do setor.</li>
+              <li>Confira se os eventos apareceram corretamente.</li>
+              <li>Os integrantes que tiverem acesso ao calendário receberão as notificações conforme as configurações do Google Agenda.</li>
+            </ol>
+            <p>A exportação .ics não envia mensagens por WhatsApp. Ela serve para alimentar o calendário compartilhado.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="query-result" aria-label="Resultado da consulta">
+        <p class="eyebrow">Resultado da consulta</p>
+        <section class="summary-grid" aria-label="Resumo dos eventos">
+          <article class="metric">
+            <span>Total de eventos</span>
+            <strong id="metricTotal">0</strong>
+          </article>
+          <article class="metric metric-future">
+            <span>Eventos futuros</span>
+            <strong id="metricFuture">0</strong>
+          </article>
+          <article class="metric metric-next">
+            <span>Próximos 7 dias</span>
+            <strong id="metricNext7">0</strong>
+          </article>
+          <article class="metric metric-revenue">
+            <span>Receita estimada</span>
+            <strong id="metricRevenue">R$ 0,00</strong>
+          </article>
+        </section>
+      </section>
+
+      <section class="filters" aria-label="Filtros">
+        <label class="field field-search">
+          <span>Buscar</span>
+          <input id="searchInput" type="search" placeholder="Evento, organizador, processo, CNPJ ou local">
+        </label>
+
+        <label class="field">
+          <span>Ano</span>
+          <select id="yearFilter"></select>
+        </label>
+
+        <label class="field">
+          <span>Mês</span>
+          <select id="monthFilter"></select>
+        </label>
+
+        <label class="field">
+          <span>Enquadramento</span>
+          <select id="taxFilter"></select>
+        </label>
+
+        <label class="field">
+          <span>Situação</span>
+          <select id="statusFilter"></select>
+        </label>
+
+        <label class="field">
+          <span>Auditor</span>
+          <select id="auditorFilter"></select>
+        </label>
+
+        <button class="ghost-button" id="clearFilters" type="button">Limpar</button>
+      </section>
+
+      <section class="calendar-section" aria-label="Calendário do mês">
+        <div class="calendar-head">
+          <div>
+            <p class="eyebrow">Visão mensal</p>
+            <h2>Calendário do mês</h2>
+          </div>
+          <div class="calendar-controls">
+            <button class="icon-button" id="prevMonth" type="button" aria-label="Mês anterior">‹</button>
+            <strong id="calendarTitle">Mês atual</strong>
+            <button class="icon-button" id="nextMonth" type="button" aria-label="Próximo mês">›</button>
+          </div>
+        </div>
+
+        <div class="calendar-grid calendar-weekdays" aria-hidden="true">
+          <span>Dom</span>
+          <span>Seg</span>
+          <span>Ter</span>
+          <span>Qua</span>
+          <span>Qui</span>
+          <span>Sex</span>
+          <span>Sáb</span>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+
+        <div class="selected-day">
+          <div class="list-head">
+            <h2 id="selectedDayTitle">Eventos do dia</h2>
+            <span id="selectedDayCount">0 eventos</span>
+          </div>
+          <div class="day-events" id="selectedDayEvents"></div>
+          <div class="empty-state compact" id="selectedDayEmpty" hidden>Nenhum evento neste dia.</div>
+        </div>
+      </section>
+
+      <section class="tomorrow-panel" aria-label="Eventos de amanhã">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Agenda curta</p>
+            <h2>Eventos de amanhã</h2>
+          </div>
+          <span id="tomorrowCount">0 eventos</span>
+        </div>
+        <div class="notice-list" id="tomorrowList"></div>
+        <div class="empty-state compact" id="tomorrowEmpty" hidden>Nenhum evento previsto para amanhã.</div>
+      </section>
+
+      <section class="weekly-section" aria-label="Semana atual">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Operação</p>
+            <h2>Semana atual</h2>
+          </div>
+          <div class="section-actions">
+            <span id="weeklyCount">0 eventos</span>
+            <button class="ghost-button compact-button" id="exportWeekIcs" type="button">Exportar semana para calendário</button>
+          </div>
+        </div>
+        <div class="weekly-list" id="weeklyList"></div>
+        <div class="empty-state compact" id="weeklyEmpty" hidden>Nenhum evento nos próximos 7 dias para a consulta atual.</div>
+      </section>
+
+      <section class="content">
+        <div class="list-head">
+          <h2>Lista de eventos</h2>
+          <span id="resultCount">0 resultados</span>
+        </div>
+        <div class="event-list" id="eventList"></div>
+        <div class="empty-state" id="emptyState" hidden>Nenhum evento encontrado.</div>
+      </section>
+    </main>
+
+    <script src="data/eventos-data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
